@@ -1,0 +1,62 @@
+@charset "utf-8";
+
+
+html, body {
+	padding: 0;
+	margin: 0;
+	font-family: sans-serif;
+	background: black;
+	color: white;
+}
+
+#subtitle {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: calc(2 * 0.125em + 1.5em + 2 * 0.5em);
+	font-size: 7.5vmin;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+}
+#subtitle > p {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+#time,
+#controls {
+	position: absolute;
+	padding: 0.5em;
+	font-size: 7.5vmin;
+}
+#time {
+	bottom: 0;
+	right: 0;
+	text-align: right;
+}
+#controls {
+	bottom: 0;
+	left: 0;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+}
+#controls > input {
+	box-sizing: border-box;
+	width: 1.5em;
+	height: 1.5em;
+	background: #202020;
+	border-radius: 12%;
+	color: inherit;
+	font: inherit;
+	border: 0;
+	padding: 0;
+	margin: 0.125em;
+	text-align: center;
+}

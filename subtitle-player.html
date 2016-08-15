@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Subtitle player</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="author" content="Denilson Sá Maia">
+
+	<link rel="stylesheet" href="subtitle-player.css">
+	<script src="subtitle-player.js" defer></script>
+
+	<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-47917227-1', 'denilson.sa.nom.br');
+	ga('send', 'pageview');
+	</script>
+</head>
+<body>
+
+<div id="subtitle"></div>
+<div id="time"></div>
+<form id="controls">
+	<input type="button" id="playpause" value="">
+	<input type="button" id="prev" value="⏪">
+	<input type="button" id="next" value="⏩">
+</form>
+
+<!-- Check https://quuz.org/webvtt/ for validation. -->
+<script type="text/vtt" id="inputfile" data-label="English" data-lang="en">
+WEBVTT
+
+1
+00:00:02.500 --> 00:00:05.250
+Instead of loading an external .vtt file,
+
+2
+00:00:05.250 --> 00:00:09.750
+The workaround is to embed it inside a script tag,
+
+3
+00:00:10.001 --> 00:00:15.000
+And then parse it using JavaScript
+and dynamically add it as a new TextTrack.
+
+</script>
+
+</body>
+</html>
