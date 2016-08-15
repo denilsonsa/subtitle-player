@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Playing a local video</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<style>
+html, body {
+	background: black;
+	color: white;
+}
+html, body, video {
+	padding: 0;
+	margin: 0;
+}
+video {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+}
+</style>
+</head>
+<body>
+
+<video controls>
+<source src="Your local video file.mp4" type="video/mp4">
+</video>
+
+<!-- Check https://quuz.org/webvtt/ for validation. -->
+<script type="text/vtt" id="subtitle" data-label="English" data-lang="en">
+WEBVTT
+
+1
+00:00:02.500 --> 00:00:05.250
+Instead of loading an external .vtt file,
+
+2
+00:00:05.250 --> 00:00:09.750
+The workaround is to embed it inside a script tag,
+
+3
+00:00:10.001 --> 00:00:15.000
+And then parse it using JavaScript
+and dynamically add it as a new TextTrack.
+
+</script>
+
+<script>
+function parse_timestamp(s) {
+	var match = s.match(/^(?:([0-9]{2,}):)?([0-5][0-9]):([0-5][0-9][.,][0-9]{0,3})/);
+	if (match == null) {
+		throw 'Invalid timestamp format: ' + s;
+	}
+	var hours = parseInt(match[1] || "0", 10);
+	var minutes = parseInt(match[2], 10);
+	var seconds = parseFloat(match[3].replace(',', '.'));
+	return seconds + 60 * minutes + 60 * 60 * hours;
+}
+
+// https://w3c.github.io/webvtt/
+// https://developer.mozilla.org/en/docs/Web/API/Web_Video_Text_Tracks_Format
+// https://en.wikipedia.org/wiki/WebVTT
+//
+// For better parsers, look at:
+// https://github.com/annevk/webvtt
+// https://github.com/mozilla/vtt.js
+function quick_and_dirty_vtt_or_srt_parser(vtt) {
+	var lines = vtt.trim().replace('\r\n', '\n').split(/[\r\n]/).map(function(line) {
+		return line.trim();
+	});
+	var cues = [];
+	var start = null;
+	var end = null;
+	var payload = null;
+	for (var i = 0; i < lines.length; i++) {
+		if (lines[i].indexOf('-->') >= 0) {
+			var splitted = lines[i].split(/[ \t]+-->[ \t]+/);
+			if (splitted.length != 2) {
+				throw 'Error when splitting "-->": ' + lines[i];
+			}
+
+			// Already ignoring anything past the "end" timestamp (i.e. cue settings).
+			start = parse_timestamp(splitted[0]);
+			end = parse_timestamp(splitted[1]);
+		} else if (lines[i] == '') {
+			if (start && end) {
+				var cue = new VTTCue(start, end, payload);
+				cues.push(cue);
+				start = null;
+				end = null;
+				payload = null;
+			}
+		} else if(start && end) {
+			if (payload == null) {
+				payload = lines[i];
+			} else {
+				payload += '\n' + lines[i];
+			}
+		}
+	}
+
+	return cues;
+}
+
+function init() {
+	// http://www.html5rocks.com/en/tutorials/track/basics/
+	// https://www.iandevlin.com/blog/2015/02/javascript/dynamically-adding-text-tracks-to-html5-video
+	var video = document.querySelector('video');
+	var subtitle = document.getElementById('subtitle');
+	var track = video.addTextTrack('subtitles', subtitle.dataset.label, subtitle.dataset.lang);
+	track.mode = "showing";
+	quick_and_dirty_vtt_or_srt_parser(subtitle.innerHTML).map(function(cue) {
+		track.addCue(cue);
+	});
+}
+init();
+</script>
+
+</body>
+</html>
