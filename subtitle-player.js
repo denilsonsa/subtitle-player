@@ -45,7 +45,7 @@ function milliseconds_to_text(ms) {
 // SRT/VTT parsing functions.
 
 function parse_timestamp(s) {
-	var match = s.match(/^(?:([0-9]{2,}):)?([0-5][0-9]):([0-5][0-9][.,][0-9]{0,3})/);
+	var match = s.match(/^(?:([0-9]+):)?([0-5][0-9]):([0-5][0-9](?:[.,][0-9]{0,3})?)/);
 	if (match == null) {
 		throw 'Invalid timestamp format: ' + s;
 	}
